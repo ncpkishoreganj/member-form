@@ -1,0 +1,400 @@
+<style>
+:root{--ncp:#1e7a45;--ncp-l:#e8f5ee;--ncp-d:#0e3d22;--red:#cc2222}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--font-sans)}
+.wrap{max-width:680px;margin:0 auto;padding:1rem 0 2rem}
+.hdr{background:var(--ncp);color:white;padding:1.25rem 1.5rem;border-radius:var(--border-radius-lg) var(--border-radius-lg) 0 0;text-align:center}
+.hdr .party{font-size:12px;opacity:.8;margin-bottom:3px;letter-spacing:.5px}
+.hdr h1{margin:0;font-size:20px;font-weight:500}
+.hdr p{margin:5px 0 0;font-size:12px;opacity:.8}
+.card-outer{position:relative;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-top:none;border-radius:0 0 var(--border-radius-lg) var(--border-radius-lg);overflow:hidden}
+.wm{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:320px;height:320px;opacity:0.055;pointer-events:none;z-index:0}
+.card{padding:1.5rem;position:relative;z-index:1}
+.sec{margin-bottom:1.75rem}
+.sec-title{font-size:12px;font-weight:500;color:var(--ncp);padding-bottom:7px;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:1rem;text-transform:uppercase;letter-spacing:.3px}
+.sec-title-decl{background:var(--ncp);color:white;padding:9px 14px;border-left:5px solid var(--red);border-radius:var(--border-radius-md);margin-bottom:1rem;font-size:15px;font-weight:500}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.fld{display:flex;flex-direction:column;gap:4px}
+.fld label{font-size:13px;color:var(--color-text-secondary)}
+.fld input,.fld select,.fld textarea{width:100%}
+.fld textarea{resize:vertical;min-height:70px}
+.req{color:#ffcdd2}.req-r{color:var(--red)}
+.err{font-size:11px;color:var(--color-text-danger);margin-top:2px}
+.fixed-fld{background:var(--color-background-secondary)!important;color:var(--color-text-secondary)!important}
+.decl-box{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:1rem 1rem 1rem 1.25rem;font-size:13.5px;line-height:2;color:var(--color-text-primary);margin-bottom:1rem;border-left:3px solid var(--ncp)}
+.decl-name-line{border:none;border-bottom:1px dotted var(--color-text-primary);background:transparent;outline:none;min-width:180px;font-size:13.5px;padding:0 4px;color:var(--color-text-primary);font-family:var(--font-sans)}
+.chk-row{display:flex;align-items:flex-start;gap:8px;margin-bottom:.75rem}
+.chk-row input[type=checkbox]{margin-top:3px;flex-shrink:0;width:16px;height:16px;cursor:pointer}
+.chk-row label{font-size:13px;line-height:1.6;cursor:pointer;color:var(--color-text-primary)}
+.radio-row{display:flex;gap:1.5rem;margin-top:6px}
+.radio-row label{display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;color:var(--color-text-primary)}
+.photo-wrap{display:flex;gap:12px;align-items:flex-start;margin-top:4px}
+.photo-preview{width:90px;height:110px;border:0.5px solid var(--color-border-tertiary);border-radius:4px;object-fit:cover;display:none}
+.photo-placeholder{width:90px;height:110px;border:0.5px dashed var(--color-border-secondary);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--color-text-secondary);text-align:center;padding:4px;flex-shrink:0}
+.contrib-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.contrib-item{display:flex;align-items:center;gap:7px;font-size:13px;cursor:pointer;color:var(--color-text-primary)}
+.contrib-item input{width:15px;height:15px;cursor:pointer;flex-shrink:0}
+.sbtn{width:100%;padding:0;background:none;border:none;cursor:pointer;border-radius:var(--border-radius-md);overflow:hidden;font-family:var(--font-sans)}
+.sbtn-inner{display:flex;align-items:center;width:100%;height:48px}
+.sbtn-check{background:var(--red);width:52px;height:100%;display:flex;align-items:center;justify-content:center;font-size:18px;color:white;flex-shrink:0}
+.sbtn-text{background:var(--ncp);flex:1;height:100%;display:flex;align-items:center;justify-content:center;color:white;font-size:16px;font-weight:500}
+.sbtn:hover .sbtn-text{background:var(--ncp-d)}.sbtn:hover .sbtn-check{background:#a01a1a}
+.sbtn:disabled .sbtn-inner{opacity:.6;cursor:not-allowed}
+.slink{background:none;border:none;color:var(--ncp);cursor:pointer;font-size:13px;padding:0;text-decoration:underline;font-family:var(--font-sans)}
+.success-circle{width:64px;height:64px;background:var(--ncp-l);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:28px;color:var(--ncp)}
+.atbl{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
+.atbl th{background:var(--ncp-l);color:var(--ncp-d);font-weight:500;padding:8px 10px;text-align:left;border-bottom:1px solid var(--color-border-tertiary);white-space:nowrap}
+.atbl td{padding:7px 10px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.atbl tr:hover td{background:var(--color-background-secondary)}
+.tbl-wrap{overflow-x:auto;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary)}
+.stat-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:1rem;text-align:center;flex:1}
+.stat-card .num{font-size:26px;font-weight:500;color:var(--ncp)}
+.stat-card .lbl{font-size:12px;color:var(--color-text-secondary);margin-top:2px}
+
+@media(max-width:600px){
+  .wrap{padding:.5rem 0 2rem}
+  .hdr{padding:1rem}
+  .hdr h1{font-size:17px}
+  .card{padding:1rem}
+  .grid2,.grid3{grid-template-columns:1fr}
+  .contrib-grid{grid-template-columns:1fr}
+  .photo-wrap{flex-direction:column}
+  .photo-preview,.photo-placeholder{width:100px;height:125px}
+  .sec-title-decl{font-size:14px;padding:8px 12px}
+  .decl-box{font-size:13px;padding:.875rem}
+  .sbtn-text{font-size:15px}
+  .wm{width:220px;height:220px}
+}
+@media(max-width:600px){
+  div[style*="grid-template-columns:calc(33%"]{
+    display:grid;
+    grid-template-columns:1fr!important
+  }
+}
+</style>
+<div class="wrap" id="app">লোড হচ্ছে...</div>
+<script>
+const EDU=["প্রাথমিক","মাধ্যমিক (SSC/সমমান)","উচ্চ মাধ্যমিক (HSC/সমমান)","স্নাতক (ডিগ্রি/অনার্স)","স্নাতকোত্তর (মাস্টার্স)","পিএইচডি/উচ্চতর ডিগ্রি","অন্যান্য"];
+const WARDS=["৪","১৪","১৬"];
+const CONTRIBS=["সাংগঠনিক কার্যক্রমে অংশগ্রহণ","প্রচার ও প্রচারণায় সহায়তা","আর্থিক সহায়তা প্রদান","স্বেচ্ছাসেবক হিসেবে কাজ","ওয়ার্ড পর্যায়ে সংগঠন গড়া","পেশাদার/প্রযুক্তিগত সহায়তা","সামাজিক কার্যক্রম","যুব সংগঠন ও নেতৃত্ব"];
+const SHEETS_URL='https://script.google.com/macros/s/AKfycbyA3WFg2-W_4_3eVXEMnkUmf_WRlRQ7v_7GHPDz-NOHmONR2Z5KV-pRVv9Y97x0bW9A/exec'; // ← এখানে Apps Script URL বসান
+const PASS="NCP@2026",KEY="ncp_members_v3";
+const TODAY=new Date().toISOString().split('T')[0];
+const app=document.getElementById("app");
+let view="form",errors={},members=[],submitting=false;
+function blankFd(){return{name:"",mobile:"",email:"",dob:"",nid:"",facebook:"",photo:"",division:"ঢাকা",district:"ঢাকা",upazila:"কাফরুল",ward:"",homeAddress:"",occupation:"",orgName:"",designation:"",education:"",prevPolitical:"না",prevOrgName:"",prevDesignation:"",contributions:[],otherContrib:"",signatureName:"",submissionDate:TODAY,agreed:false};}
+let fd=blankFd();
+
+const LOGO_SVG=`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+  <defs><clipPath id="wm-cc"><circle cx="100" cy="100" r="96"/></clipPath><path id="wm-arc" d="M 18 90 A 83 83 0 0 1 182 90"/></defs>
+  <circle cx="100" cy="100" r="98" fill="#1e7a45"/>
+  <rect x="2" y="127" width="196" height="72" fill="#cc2222" clip-path="url(#wm-cc)"/>
+  <path d="M 5 129 A 97 97 0 0 0 195 129" fill="none" stroke="white" stroke-width="2.5"/>
+  <circle cx="100" cy="100" r="96" fill="none" stroke="white" stroke-width="3.5"/>
+  <path d="M100 50 C95 64 93 80 100 92 C107 80 105 64 100 50Z" fill="#1e7a45" stroke="white" stroke-width="1.8" transform="rotate(75,100,92)"/>
+  <path d="M100 50 C95 64 93 80 100 92 C107 80 105 64 100 50Z" fill="#1e7a45" stroke="white" stroke-width="1.8" transform="rotate(-75,100,92)"/>
+  <path d="M100 50 C95 64 93 80 100 92 C107 80 105 64 100 50Z" fill="#1e7a45" stroke="white" stroke-width="1.8" transform="rotate(55,100,92)"/>
+  <path d="M100 50 C95 64 93 80 100 92 C107 80 105 64 100 50Z" fill="#1e7a45" stroke="white" stroke-width="1.8" transform="rotate(-55,100,92)"/>
+  <path d="M100 50 C95 64 93 80 100 92 C107 80 105 64 100 50Z" fill="#1e7a45" stroke="white" stroke-width="1.8" transform="rotate(35,100,92)"/>
+  <path d="M100 50 C95 64 93 80 100 92 C107 80 105 64 100 50Z" fill="#1e7a45" stroke="white" stroke-width="1.8" transform="rotate(-35,100,92)"/>
+  <path d="M100 50 C95 64 93 80 100 92 C107 80 105 64 100 50Z" fill="#1e7a45" stroke="white" stroke-width="1.8" transform="rotate(17,100,92)"/>
+  <path d="M100 50 C95 64 93 80 100 92 C107 80 105 64 100 50Z" fill="#1e7a45" stroke="white" stroke-width="1.8" transform="rotate(-17,100,92)"/>
+  <path d="M100 50 C95 64 93 80 100 92 C107 80 105 64 100 50Z" fill="#1e7a45" stroke="white" stroke-width="1.8"/>
+  <line x1="100" y1="92" x2="100" y2="108" stroke="white" stroke-width="2.5"/>
+  <path d="M66 110 Q75 106 84 110 Q93 114 102 110 Q111 106 120 110 Q129 106 134 110" fill="none" stroke="white" stroke-width="2"/>
+  <path d="M63 117 Q73 113 83 117 Q93 121 103 117 Q113 113 123 117 Q131 113 137 117" fill="none" stroke="white" stroke-width="2"/>
+  <path d="M67 123 Q76 119 85 123 Q94 127 103 123 Q112 119 121 123" fill="none" stroke="white" stroke-width="2"/>
+  <text fill="white" font-size="14.5" font-weight="bold" font-family="sans-serif"><textPath href="#wm-arc" startOffset="50%" text-anchor="middle">জাতীয় নাগরিক পার্টি</textPath></text>
+  <text x="100" y="157" text-anchor="middle" fill="white" font-size="26" font-weight="bold" font-family="sans-serif">এনসিপি</text>
+</svg>`;
+
+function hdr(title,sub){return`<div class="hdr"><div class="party">জাতীয় নাগরিক পার্টি (NCP) — কাফরুল থানা</div><h1>${title}</h1>${sub?`<p>${sub}</p>`:""}</div>`;}
+function cardWrap(inner){return`<div class="card-outer"><div class="wm">${LOGO_SVG}</div><div class="card">${inner}</div></div>`;}
+
+function fld(id,lbl,type,opts={}){
+  const req=opts.req!==false?`<span class="req">*</span>`:"";
+  const err=errors[id]?`<div class="err">${errors[id]}</div>`:"";
+  if(opts.textarea){return`<div class="fld"><label>${lbl}${opts.req!==false?` <span class="req">*</span>`:""}</label><textarea id="f-${id}" placeholder="${opts.ph||''}">${fd[id]||""}</textarea>${err}</div>`;}
+  if(opts.opts){const os='<option value="">-- নির্বাচন করুন --</option>'+opts.opts.map(o=>`<option value="${o}"${fd[id]===o?' selected':''}>${o}</option>`).join('');return`<div class="fld"><label>${lbl} ${req}</label><select id="f-${id}">${os}</select>${err}</div>`;}
+  return`<div class="fld"><label>${lbl} ${req}</label><input type="${type||'text'}" id="f-${id}" value="${fd[id]||''}" placeholder="${opts.ph||''}">${err}</div>`;
+}
+
+function resizePhoto(dataUrl,cb){
+  const img=new Image();
+  img.onload=()=>{
+    const MW=200,MH=250,r=Math.min(MW/img.width,MH/img.height,1);
+    const c=document.createElement('canvas');c.width=Math.round(img.width*r);c.height=Math.round(img.height*r);
+    c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+    cb(c.toDataURL('image/jpeg',0.78));
+  };
+  img.src=dataUrl;
+}
+
+function bind(){
+  ["name","mobile","email","dob","nid","facebook","ward","homeAddress","occupation","orgName","designation","education","prevOrgName","prevDesignation","otherContrib","signatureName","submissionDate"].forEach(id=>{
+    const el=document.getElementById("f-"+id);if(!el)return;
+    const ev=el.tagName==="SELECT"?"change":"input";
+    el.addEventListener(ev,e=>{fd[id]=e.target.value;if(errors[id]){delete errors[id];refreshErr(id);}});
+  });
+  document.querySelectorAll('input[name="prevPol"]').forEach(r=>r.addEventListener('change',e=>{fd.prevPolitical=e.target.value;errors={};render();}));
+  CONTRIBS.forEach((c,i)=>{
+    const el=document.getElementById("cb-"+i);if(!el)return;
+    el.addEventListener("change",e=>{
+      if(e.target.checked){if(!fd.contributions.includes(c))fd.contributions.push(c);}
+      else fd.contributions=fd.contributions.filter(x=>x!==c);
+      if(errors.contributions&&fd.contributions.length){delete errors.contributions;const e2=document.getElementById("err-contrib");if(e2)e2.remove();}
+    });
+  });
+  const ag=document.getElementById("cb-agreed");if(ag)ag.addEventListener("change",e=>{fd.agreed=e.target.checked;if(errors.agreed&&fd.agreed){delete errors.agreed;const el=document.getElementById("err-agreed");if(el)el.remove();}});
+  const ph=document.getElementById("f-photo");
+  if(ph){
+    ph.addEventListener("change",e=>{
+      const file=e.target.files[0];if(!file)return;
+      const r=new FileReader();
+      r.onload=ev=>resizePhoto(ev.target.result,b64=>{
+        fd.photo=b64;
+        const prev=document.getElementById("photo-preview");
+        const placeholder=document.getElementById("photo-placeholder");
+        if(prev){prev.src=b64;prev.style.display='block';}
+        if(placeholder)placeholder.style.display='none';
+        if(errors.photo){delete errors.photo;const e2=document.getElementById("err-photo");if(e2)e2.remove();}
+      });
+      r.readAsDataURL(file);
+    });
+  }
+  if(fd.photo){
+    const prev=document.getElementById("photo-preview");
+    const placeholder=document.getElementById("photo-placeholder");
+    if(prev){prev.src=fd.photo;prev.style.display='block';}
+    if(placeholder)placeholder.style.display='none';
+  }
+}
+
+function refreshErr(id){
+  const cont=document.getElementById("f-"+id)?.closest(".fld");if(!cont)return;
+  let e=cont.querySelector(".err");if(e)e.remove();
+  if(errors[id]){const d=document.createElement("div");d.className="err";d.textContent=errors[id];cont.appendChild(d);}
+}
+
+function validate(){
+  const e={};
+  if(!fd.name.trim())e.name="নাম আবশ্যক";
+  if(!fd.mobile.match(/^01[3-9]\d{8}$/))e.mobile="সঠিক মোবাইল নম্বর দিন (01XXXXXXXXX)";
+  if(fd.email&&!fd.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/))e.email="সঠিক ইমেইল দিন";
+  if(!fd.dob)e.dob="জন্ম তারিখ আবশ্যক";
+  if(!fd.nid.match(/^\d{10}$|^\d{13}$|^\d{17}$/))e.nid="সঠিক NID দিন";
+  if(!fd.photo)e.photo="ছবি আপলোড করুন";
+  if(!fd.ward)e.ward="ওয়ার্ড নির্বাচন করুন";
+  if(!fd.homeAddress.trim())e.homeAddress="বাসার ঠিকানা আবশ্যক";
+  if(!fd.occupation.trim())e.occupation="পেশা আবশ্যক";
+  if(!fd.education)e.education="শিক্ষাগত যোগ্যতা নির্বাচন করুন";
+  if(fd.prevPolitical==="হ্যাঁ"&&!fd.prevOrgName.trim())e.prevOrgName="সংগঠনের নাম আবশ্যক";
+  if(!fd.contributions.length)e.contributions="অন্তত একটি নির্বাচন করুন";
+  if(!fd.signatureName.trim())e.signatureName="স্বাক্ষর নাম আবশ্যক";
+  if(!fd.agreed)e.agreed="ঘোষণায় সম্মতি প্রদান আবশ্যক";
+  return e;
+}
+
+async function submit(){
+  const e=validate();
+  if(Object.keys(e).length){errors=e;render();setTimeout(()=>{const f=document.querySelector(".err");if(f)f.scrollIntoView({behavior:"smooth",block:"center"});},100);return;}
+  submitting=true;render();
+  try{
+    const payload={...fd,photo:fd.photo?'আপলোড করা হয়েছে':'',contributions:fd.contributions.join(', ')};
+    await fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    view="success";
+  }catch{submitting=false;render();alert("সমস্যা হয়েছে। ইন্টারনেট সংযোগ চেক করুন।");return;}
+  submitting=false;render();
+}
+
+function render(){
+  if(view==="form")renderForm();
+  else if(view==="success")renderSuccess();
+  else if(view==="login")renderLogin();
+  else if(view==="admin")renderAdmin();
+}
+
+function renderForm(){
+  const fix=`class="fixed-fld"`;
+  const contribItems=CONTRIBS.map((c,i)=>`<label class="contrib-item"><input type="checkbox" id="cb-${i}"${fd.contributions.includes(c)?' checked':''}> ${c}</label>`).join('');
+  const prevYes=fd.prevPolitical==="হ্যাঁ";
+  const photoErr=errors.photo?`<div class="err" id="err-photo">${errors.photo}</div>`:"";
+  const contribErr=errors.contributions?`<div class="err" id="err-contrib">${errors.contributions}</div>`:"";
+  const agreeErr=errors.agreed?`<div class="err" id="err-agreed">${errors.agreed}</div>`:"";
+
+  const inner=`
+    <div class="sec">
+      <div class="sec-title">১. ব্যক্তিগত তথ্য</div>
+      <div class="grid2" style="margin-bottom:12px">
+        ${fld("name","পূর্ণ নাম","text",{ph:"আপনার পূর্ণ নাম"})}
+        ${fld("mobile","মোবাইল নম্বর","tel",{ph:"01XXXXXXXXX"})}
+        ${fld("email","ইমেইল","email",{ph:"example@email.com",req:false})}
+        ${fld("dob","জন্ম তারিখ","date")}
+        ${fld("nid","জাতীয় পরিচয়পত্র (NID)","text",{ph:"NID নম্বর"})}
+        ${fld("facebook","ফেসবুক প্রোফাইল নাম/লিঙ্ক","text",{ph:"facebook.com/yourname",req:false})}
+      </div>
+      <div class="fld">
+        <label>আবেদনকারীর ছবি <span class="req">*</span></label>
+        <div class="photo-wrap">
+          <div>
+            <div id="photo-placeholder" class="photo-placeholder">পাসপোর্ট<br>সাইজ ছবি</div>
+            <img id="photo-preview" class="photo-preview" alt="ছবি">
+          </div>
+          <div style="flex:1">
+            <input type="file" id="f-photo" accept="image/*" style="margin-bottom:6px">
+            <div style="font-size:11px;color:var(--color-text-secondary);line-height:1.5">পাসপোর্ট সাইজ ছবি আপলোড করুন<br>(JPG, PNG — সর্বোচ্চ ৫ MB)</div>
+            ${photoErr}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-title">২. পেশাদার ও শিক্ষাগত তথ্য</div>
+      <div class="grid2">
+        ${fld("occupation","পেশা","text",{ph:"আপনার পেশা"})}
+        ${fld("education","শিক্ষাগত যোগ্যতা","",{opts:EDU})}
+        ${fld("orgName","প্রতিষ্ঠানের নাম","text",{ph:"কর্মরত প্রতিষ্ঠান",req:false})}
+        ${fld("designation","পদবী","text",{ph:"আপনার পদবী",req:false})}
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-title">৩. পূর্ববর্তী রাজনৈতিক অভিজ্ঞতা</div>
+      <div class="fld" style="margin-bottom:${prevYes?'12px':'0'}">
+        <label>কোনো রাজনৈতিক দলে পূর্বে যুক্ত ছিলেন? <span class="req">*</span></label>
+        <div class="radio-row">
+          <label><input type="radio" name="prevPol" value="না"${!prevYes?' checked':''}> না</label>
+          <label><input type="radio" name="prevPol" value="হ্যাঁ"${prevYes?' checked':''}> হ্যাঁ</label>
+        </div>
+      </div>
+      ${prevYes?`<div class="grid2">
+        ${fld("prevOrgName","রাজনৈতিক সংগঠনের নাম","text",{ph:"সংগঠনের নাম"})}
+        ${fld("prevDesignation","ওই সংগঠনে পদবী","text",{ph:"আপনার পদবী",req:false})}
+      </div>`:""}
+    </div>
+
+    <div class="sec">
+      <div class="sec-title">৪. ঠিকানা</div>
+      <div class="grid3">
+        <div class="fld"><label>বিভাগ <span class="req">*</span></label><input type="text" value="ঢাকা" disabled ${fix}></div>
+        <div class="fld"><label>জেলা <span class="req">*</span></label><input type="text" value="ঢাকা" disabled ${fix}></div>
+        <div class="fld"><label>থানা <span class="req">*</span></label><input type="text" value="কাফরুল" disabled ${fix}></div>
+      </div>
+      <div style="display:grid;grid-template-columns:calc(33% - 4px) 1fr;gap:12px;margin-top:12px">
+        ${fld("ward","ওয়ার্ড নম্বর","",{opts:WARDS})}
+        ${fld("homeAddress","বাসার সম্পূর্ণ ঠিকানা","text",{ph:"রোড, বাসা/ফ্ল্যাট, এলাকা"})}
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-title">৫. এনসিপি কাফরুলে অবদান রাখার আগ্রহ</div>
+      <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:8px">কীভাবে দলে অবদান রাখতে চান? <span class="req-r">*</span></div>
+      <div class="contrib-grid">${contribItems}</div>
+      ${contribErr}
+      <div style="margin-top:12px">${fld("otherContrib","অন্যান্য","",{textarea:true,ph:"অন্য কোনো উপায়ে অবদান রাখতে চাইলে লিখুন...",req:false})}</div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-title-decl">৬. ঘোষণা ও সম্মতি</div>
+      <div class="decl-box">
+        <div style="margin-bottom:6px">আমি, <input class="decl-name-line" id="decl-name-inline" value="${fd.signatureName||''}" placeholder="আপনার নাম..." oninput="fd.signatureName=this.value;const f=document.getElementById('f-signatureName');if(f)f.value=this.value;"></div>
+        দৃঢ়চিত্তে শপথ করিছি যে, আমি দলের আদর্শ ও শৃঙ্খলা মেনে চলবো। রাষ্ট্র ও জনগণের কল্যাণে অবিচল থাকবো। দেশের স্বাধীনতা, সার্বভৌমত্ব ও গণতান্ত্রিক মূল্যবোধ সমুন্নত রাখবো। আমার বিরুদ্ধে দলীয় শৃঙ্খলা পরিপন্থী কোন অভিযোগ প্রমাণিত হলে দল আমার বিরুদ্ধে যেকোনো সিদ্ধান্ত নিতে পারবে।
+      </div>
+      <div class="chk-row">
+        <input type="checkbox" id="cb-agreed"${fd.agreed?' checked':''}>
+        <label for="cb-agreed">আমি উপরের ঘোষণায় সম্মত এবং দলীয় সদস্যপদের উদ্দেশ্যে আমার তথ্য ব্যবহারের সম্মতি প্রদান করিছি। <span class="req-r">*</span></label>
+      </div>
+      ${agreeErr}
+      <div class="grid2" style="margin-top:8px">
+        ${fld("signatureName","স্বাক্ষর হিসেবে পূর্ণ নাম","text",{ph:"পূর্ণ নাম"})}
+        ${fld("submissionDate","জমা দেওয়ার তারিখ","date")}
+      </div>
+    </div>
+
+    <button class="sbtn" id="sbtn" ${submitting?"disabled":""}>
+      <div class="sbtn-inner">
+        <div class="sbtn-check">${submitting?"...":"✓"}</div>
+        <div class="sbtn-text">${submitting?"জমা হচ্ছে...":"নিবন্ধন জমা দিন"}</div>
+      </div>
+    </button>
+    <div style="text-align:center;margin-top:1rem">
+      <span style="font-size:13px;color:var(--color-text-secondary)">অ্যাডমিন? </span>
+      <button class="slink" onclick="view='login';render()">এখানে লগইন করুন</button>
+    </div>`;
+
+  app.innerHTML=hdr("সদস্য নিবন্ধন ফর্ম","সকল তারকা (*) চিহ্নিত তথ্য পূরণ করা আবশ্যক")+cardWrap(inner);
+  bind();
+  document.getElementById("sbtn").addEventListener("click",submit);
+  // sync inline name field with signature field
+  const sn=document.getElementById("f-signatureName");
+  if(sn)sn.addEventListener("input",e=>{fd.signatureName=e.target.value;const d=document.getElementById("decl-name-inline");if(d)d.value=e.target.value;});
+}
+
+function renderSuccess(){
+  app.innerHTML=hdr("সদস্য নিবন্ধন ফর্ম")+cardWrap(`
+  <div style="text-align:center;padding:2rem">
+    <div class="success-circle">✓</div>
+    <h2 style="font-size:20px;font-weight:500;color:var(--ncp);margin:0 0 8px">সফলভাবে নিবন্ধিত হয়েছেন!</h2>
+    <p style="color:var(--color-text-secondary);font-size:14px;max-width:420px;margin:0 auto 1.5rem;line-height:1.7">আপনার তথ্য সংরক্ষিত হয়েছে।<br>জাতীয় নাগরিক পার্টি কাফরুলে আপনাকে স্বাগতম।</p>
+    <button class="sbtn" style="max-width:240px;margin:0 auto" onclick="fd=blankFd();errors={};view='form';render()">
+      <div class="sbtn-inner"><div class="sbtn-check">+</div><div class="sbtn-text">নতুন নিবন্ধন</div></div>
+    </button>
+  </div>`);
+}
+
+function renderLogin(){
+  app.innerHTML=hdr("অ্যাডমিন লগইন")+cardWrap(`
+  <div style="max-width:320px;margin:0 auto;padding:1rem 0">
+    <div class="fld" style="margin-bottom:1rem">
+      <label>পাসওয়ার্ড <span class="req-r">*</span></label>
+      <input type="password" id="apass" placeholder="পাসওয়ার্ড দিন" autofocus>
+      <div id="lerr" class="err" style="display:none">ভুল পাসওয়ার্ড।</div>
+    </div>
+    <button class="sbtn" id="lbtn"><div class="sbtn-inner"><div class="sbtn-check">→</div><div class="sbtn-text">লগইন করুন</div></div></button>
+    <div style="text-align:center;margin-top:1rem"><button class="slink" onclick="view='form';render()">← ফিরে যান</button></div>
+  </div>`);
+  const doLogin=async()=>{
+    if(document.getElementById("apass").value===PASS){
+      let ex=[];try{const r=await window.storage.get(KEY);if(r)ex=JSON.parse(r.value);}catch{}
+      members=ex;view="admin";render();
+    } else document.getElementById("lerr").style.display="block";
+  };
+  document.getElementById("lbtn").addEventListener("click",doLogin);
+  document.getElementById("apass").addEventListener("keydown",e=>{if(e.key==="Enter")doLogin();});
+}
+
+function renderAdmin(){
+  const ks=["name","mobile","email","dob","nid","facebook","division","district","upazila","ward","homeAddress","occupation","orgName","designation","education","prevPolitical","prevOrgName","prevDesignation","contributions","otherContrib","signatureName","submissionDate","time"];
+  const cols=["#","নাম","মোবাইল","ইমেইল","জন্ম","NID","ফেসবুক","বিভাগ","জেলা","থানা","ওয়ার্ড","বাসা","পেশা","প্রতিষ্ঠান","পদবী","শিক্ষা","রাজনৈতিক অভিজ্ঞতা","পূর্ববর্তী সংগঠন","পূর্ববর্তী পদবী","অবদান","অন্যান্য","স্বাক্ষর","তারিখ","সময়"];
+  const rows=members.map((m,i)=>`<tr><td>${i+1}</td>${ks.map(k=>`<td title="${m[k]||''}">${m[k]||"-"}</td>`).join("")}</tr>`).join("");
+  const wc=members.reduce((a,m)=>{a[m.ward]=(a[m.ward]||0)+1;return a},{});
+  const top=Object.entries(wc).sort((a,b)=>b[1]-a[1])[0];
+  app.innerHTML=hdr("অ্যাডমিন প্যানেল")+cardWrap(`
+    <div style="display:flex;gap:12px;margin-bottom:1.5rem">
+      <div class="stat-card"><div class="num">${members.length}</div><div class="lbl">মোট নিবন্ধিত সদস্য</div></div>
+      ${top?`<div class="stat-card"><div class="num" style="font-size:18px">ওয়ার্ড ${top[0]}</div><div class="lbl">সর্বোচ্চ (${top[1]} জন)</div></div>`:""}
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <span style="font-size:15px;font-weight:500">সদস্য তালিকা</span>
+      <div style="display:flex;gap:8px">
+        <button onclick="dlCSV()" style="background:var(--ncp);color:white;border:none;padding:7px 14px;border-radius:var(--border-radius-md);cursor:pointer;font-size:13px;font-family:var(--font-sans)">↓ Excel ডাউনলোড</button>
+        <button onclick="view='form';render()" style="background:none;border:0.5px solid var(--color-border-secondary);padding:7px 14px;border-radius:var(--border-radius-md);cursor:pointer;font-size:13px;color:var(--color-text-primary);font-family:var(--font-sans)">← বের হন</button>
+      </div>
+    </div>
+    ${members.length===0?`<div style="text-align:center;padding:2.5rem;color:var(--color-text-secondary)">এখনো কোনো সদস্য নিবন্ধিত হননি</div>`:`<div class="tbl-wrap"><table class="atbl"><thead><tr>${cols.map(c=>`<th>${c}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></div>`}
+  `);
+}
+
+function dlCSV(){
+  const h=["ক্রমিক","নাম","মোবাইল","ইমেইল","জন্ম","NID","ফেসবুক","বিভাগ","জেলা","থানা","ওয়ার্ড","বাসার ঠিকানা","পেশা","প্রতিষ্ঠান","পদবী","শিক্ষা","রাজনৈতিক অভিজ্ঞতা","পূর্ববর্তী সংগঠন","পূর্ববর্তী পদবী","অবদানের ক্ষেত্র","অন্যান্য","স্বাক্ষর নাম","জমার তারিখ","নিবন্ধনের সময়"];
+  const ks=["name","mobile","email","dob","nid","facebook","division","district","upazila","ward","homeAddress","occupation","orgName","designation","education","prevPolitical","prevOrgName","prevDesignation","contributions","otherContrib","signatureName","submissionDate","time"];
+  const rows=members.map((m,i)=>[i+1,...ks.map(k=>m[k]||"")]);
+  const csv=[h,...rows].map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(",")).join("\r\n");
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"}));
+  a.download="NCP_কাফরুল_সদস্য_তালিকা.csv";a.click();
+}
+render();
+</script>
